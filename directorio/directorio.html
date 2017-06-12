@@ -5,5 +5,10 @@
         <span>
             {{ person.name }} {{ person.last_nam }}
         </span>
+        <span>
+            {{ person.cargo }}
+        </span>
+        <a ui-sref-active="active" ui-sref="directorio.personaDetail({ personId: person.id })"> ver info de {{ person.id }} </a>
     </li>
 </ul>
+<ui-view></ui-view>

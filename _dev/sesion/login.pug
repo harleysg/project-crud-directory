@@ -1,4 +1,7 @@
-doctype html
-html(lang="es")
-    head
-    body
+section
+    h2 login
+
+    form
+        input(type="text" placeholder="Email" ng-model="email")
+        input(type="password" placeholder="Clave" ng-model="pass")
+        input(type="submit" name="login" value="INGRESAR" class="loginButton ingreso loginButton ingreso"  ui-sref="directorio" ui-sref-active="is--active")

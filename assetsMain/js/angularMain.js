@@ -1,6 +1,7 @@
 const myApp = angular.module('appComponent', ['ui.router']);
 
-myApp.config(function($stateProvider){
+myApp
+.config(function($stateProvider){
 
 	let states = [
 		{
@@ -14,7 +15,7 @@ myApp.config(function($stateProvider){
 			,	component: 'ingreso'
 			,	resolve: {
 					ingreso: function(MainService) {
-					return MainService.validarIngreso();
+						return MainService.validarIngreso();
 					}
 				}
 		}
@@ -28,36 +29,49 @@ myApp.config(function($stateProvider){
 					}
 				}
 		}
+		,{ 
+				name: 'directorio.personaDetail'
+			,	url: '/{personId}'
+			,	component: 'person'
+			,	resolve: {
+					person: (people, $stateParams) => {
+						return console.log(people, $stateParams)
+						// return people.find(function(person) { 
+						// 	return person.id === $stateParams.personId;
+						// });
+					}
+				}
+		}
 	]
-		// Loop over the state definitions and register them
+	// Loop over the state definitions and register them
 	states.forEach(function(state) {
 		$stateProvider.state(state);
 	})
-});
+})
 
-myApp.run(function($http, $uiRouter) {
+.run(function($http, $uiRouter) {
 //   window['ui-router-visualizer'].visualizer($uiRouter);
 //   $http.get('data/people.json', { cache: true });
-});
+})
 
-myApp.component('index', {
+.component('index', {
 		templateUrl: 'sesion/inicio.html' 
 	,	controller: CtrlIndex
 })
-myApp.component('ingreso', { 
+.component('ingreso', { 
 	templateUrl: 'sesion/ingreso.html' 
 	,	controller: Ctrlingreso
-});
-myApp.component('directorio', { 
+})
+.component('directorio', { 
 		bindings: { directorio: '<' }
 	,	templateUrl: 'directorio/directorio.html' 
-	,	controller: Ctrldirectorio,
-	// [
-	// 	// 'MainService',
-	// 	Ctrldirectorio
-	// ]
-});
-myApp.service('MainService', function($http){
+	,	controller: Ctrldirectorio
+})
+.component('person', {
+	bindings: { person: '<' },
+	template: '<div>Name: </div>'
+})
+.service('MainService', function($http){
 	let service = {
 		validarIngreso: () => {
 			return console.log('Ejecución de servicio validarIngreso')
@@ -88,10 +102,18 @@ myApp.service('MainService', function($http){
 			        }).error(function(err){
 			            return console.log("Error: "+err);
 			        });
+		} ,
+		getPerson: (id) => {
+			function personMatchesParam(person) {
+				return person.id === id;
+			}
+			return service.ListarUsuarios().then((people) => {
+				return people.find(personMatchesParam)
+			});
 		}
 	}
 	return service;
-});
+})
 
 
 // ==================================
@@ -106,16 +128,17 @@ function Ctrlingreso(){
 //   console.log('Ctrlingreso')
 };
 
-function Ctrldirectorio(){
+function Ctrldirectorio(MainService){
 	let 
-		  vm = this , 
+		vm = this , 
 		dir = vm.directorio
+		, a = MainService.ListarUsuarios()
 	;
 	vm.message = 'Estoy en directorio';
 	vm.back = 'index';
-
+  	console.log(a);
   	// console.log(vm)
-  	// console.log(dir)
-//   var usualisDirectorio = MainService.ListarUsuarios()
-//   console.log(usualisDirectorio.$$state)
+  	// console.log(dir.data)
+	//   var usualisDirectorio = MainService.ListarUsuarios()
+	//   console.log(usualisDirectorio.$$state)
 };
