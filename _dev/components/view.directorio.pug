@@ -1,0 +1,10 @@
+h1 {{ $ctrl.message }}
+header
+    button(ui-sref="index" ui-sref-active="is--active") {{ $ctrl.back }}
+section
+    h2 {{ {{ $ctrl.message }} }}
+    ul
+        li(ng-repeat="person in $ctrl.directorio.data | orderBy: person.name")
+            span {{ person.name }} {{ person.last_nam }}
+            span {{ person.cargo }}
+            a(ui-sref-active="active" ui-sref="directorio.personaDetail({ personId: person.id })") ver info de {{ person.id }} $ctrl.person.name
