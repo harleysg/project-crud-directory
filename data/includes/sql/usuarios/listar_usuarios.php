@@ -5,21 +5,22 @@ include("../../class/conexion.php");
 
     if(isset($variable->control) && $variable->control == "SI"){
 
-    $rowusuarios = array();
+        $rowusuarios = array();
 
-    $selec_usuarios="SELECT * FROM directorio";
-    $result = mysql_query($selec_usuarios);
+        $selec_usuarios="SELECT * FROM directorio";
+        $result = mysql_query($selec_usuarios);
 
 
-    while ($row_usuarios = mysql_fetch_assoc($result)) {
-
+        while ($row_usuarios = mysql_fetch_assoc($result)) {
             $rowusuarios[] = $row_usuarios;
-	}
-    $json_query = json_encode($rowusuarios);
-    $json_vista = html_entity_decode(json_encode($json_query));
-    echo $json_query;
-    
-    }else {
+        }
+
+        $json_query = json_encode($rowusuarios);
+        $json_vista = html_entity_decode(json_encode($json_query));
+        
+        echo $json_query;
+        
+    } else {
     	echo "No ingreso al control";
     }
 ?>

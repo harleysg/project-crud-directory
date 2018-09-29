@@ -1,20 +1,20 @@
 const myApp = angular.module('appComponent', ['ui.router']);
 
 myApp
-.config(function($stateProvider){
+	.config(function ($stateProvider, $urlRouterProvider){
 
 	let states = [
 		{
-				name:	'index'
+				name:	'login'
 			,	url:	'/'
-			,	component:	'index'
+			,	component:	'login'
 		},
 		{
-				name:	'ingreso'
-			,	url:	'/ingreso'
-			,	component: 'ingreso'
+				name:	'home'
+			,	url:	'/home'
+			,	component: 'home'
 			,	resolve: {
-					ingreso: function(MainService) {
+					home: function(MainService) {
 						return MainService.validarIngreso();
 					}
 				}
@@ -25,21 +25,24 @@ myApp
 			,	component: 'directorio'
 			,	resolve:{
 					directorio: function(MainService){
-						return MainService.ListarUsuarios();
+						return MainService.getAllPeople();
 					}
 				}
 		}
 		,{ 
 				name: 'directorio.personaDetail'
-			,	url: '/{personId}'
+			,	url: '/:personId'
 			,	component: 'person'
 			,	resolve: {
-					person: (people, $stateParams) => {
-						return console.log(people, $stateParams)
-						// return people.find(function(person) { 
-						// 	return person.id === $stateParams.personId;
-						// });
+					person: function (MainService, $stateParams) {
+						return MainService.getPerson($stateParams.personId);
 					}
+					// person: (people, $stateParams) => {
+					// 	// return console.log($stateParams)
+					// 	return people.find(function(person) { 
+					// 		return person.id === $stateParams.personId;
+					// 	});
+					// }
 				}
 		}
 	]
@@ -47,6 +50,7 @@ myApp
 	states.forEach(function(state) {
 		$stateProvider.state(state);
 	})
+	$urlRouterProvider.otherwise('/')
 })
 
 .run(function($http, $uiRouter) {
@@ -54,22 +58,23 @@ myApp
 //   $http.get('data/people.json', { cache: true });
 })
 
-.component('index', {
-		templateUrl: 'sesion/inicio.html' 
+.component('login', {
+		templateUrl: 'components/view.login.html' 
 	,	controller: CtrlIndex
 })
-.component('ingreso', { 
-	templateUrl: 'sesion/ingreso.html' 
+.component('home', { 
+	templateUrl: 'components/view.home.html' 
 	,	controller: Ctrlingreso
 })
 .component('directorio', { 
 		bindings: { directorio: '<' }
-	,	templateUrl: 'directorio/directorio.html' 
+	,	templateUrl: 'components/view.directorio.html' 
 	,	controller: Ctrldirectorio
 })
 .component('person', {
 	bindings: { person: '<' },
 	template: '<div>Name: </div>'
+	, controller: CtrlPerson
 })
 .service('MainService', function($http){
 	let service = {
@@ -88,8 +93,8 @@ myApp
 			//             return console.log("Error: "+err);
 			//         });
 		} ,
-		ListarUsuarios: () => {
-			// return console.log('Ejecución de servicio ListarUsuarios')
+		getAllPeople: () => {
+			// return console.log('Ejecución de servicio getAllPeople')
 			return $http({
 			            method:'POST',
 			            url:'data/includes/sql/usuarios/listar_usuarios.php',
@@ -98,6 +103,7 @@ myApp
 			            },
 			            data:{ control : "SI" } 
 			        }).success(function(respuesta){
+						// console.log(respuesta)
 			            return respuesta;
 			        }).error(function(err){
 			            return console.log("Error: "+err);
@@ -105,10 +111,12 @@ myApp
 		} ,
 		getPerson: (id) => {
 			function personMatchesParam(person) {
+				console.log(person)
 				return person.id === id;
 			}
-			return service.ListarUsuarios().then((people) => {
-				return people.find(personMatchesParam)
+			return service.getAllPeople().then((people) => {
+				console.log(people)
+				// return people.find(personMatchesParam)
 			});
 		}
 	}
@@ -132,13 +140,17 @@ function Ctrldirectorio(MainService){
 	let 
 		vm = this , 
 		dir = vm.directorio
-		, a = MainService.ListarUsuarios()
+		// , a = MainService.ListarUsuarios()
 	;
 	vm.message = 'Estoy en directorio';
 	vm.back = 'index';
-  	console.log(a);
-  	// console.log(vm)
-  	// console.log(dir.data)
+  	// console.log(a);
+  	console.log(vm)
+  	console.log(dir.data)
 	//   var usualisDirectorio = MainService.ListarUsuarios()
 	//   console.log(usualisDirectorio.$$state)
+};
+
+function CtrlPerson(MainService) {
+	  console.log('Ctrl People')
 };

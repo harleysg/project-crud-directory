@@ -1,5 +1,8 @@
 <h1>  {{ $ctrl.message }}</h1>
-<button ui-sref="index" ui-sref-active="is--active">{{ $ctrl.back }}</button>
+<button ui-sref="index" >{{ $ctrl.back }}</button>
+
+<ui-view ui-sref-active="is-active"></ui-view>
+
 <ul>
     <li ng-repeat="person in $ctrl.directorio.data | orderBy: person.name">
         <span>
@@ -11,4 +14,3 @@
         <a ui-sref-active="active" ui-sref="directorio.personaDetail({ personId: person.id })"> ver info de {{ person.id }} </a>
     </li>
 </ul>
-<ui-view></ui-view>
