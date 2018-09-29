@@ -54,7 +54,8 @@ myApp
 })
 
 .run(function($http, $uiRouter) {
-//   window['ui-router-visualizer'].visualizer($uiRouter);
+	var Visualizer = window['ui-router-visualizer'].Visualizer;
+	$uiRouter.plugin(Visualizer);
 //   $http.get('data/people.json', { cache: true });
 })
 
@@ -73,7 +74,7 @@ myApp
 })
 .component('person', {
 	bindings: { person: '<' },
-	template: '<div>Name: </div>'
+	template: '<div>Name: Hello {{personId}} </div>'
 	, controller: CtrlPerson
 })
 .service('MainService', function($http){
@@ -151,6 +152,7 @@ function Ctrldirectorio(MainService){
 	//   console.log(usualisDirectorio.$$state)
 };
 
-function CtrlPerson(MainService) {
+function CtrlPerson(MainService, $scope, $stateParams, $state) {
 	  console.log('Ctrl People')
+	  $scope.personId = $stateParams.personId
 };

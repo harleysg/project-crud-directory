@@ -6,7 +6,7 @@
 <ul>
     <li ng-repeat="person in $ctrl.directorio.data | orderBy: person.name">
         <span>
-            {{ person.name }} {{ person.last_nam }}
+            {{ person.name }} {{ person.last_nam }} {{ person.id }}
         </span>
         <span>
             {{ person.cargo }}
