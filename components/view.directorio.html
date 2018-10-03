@@ -1,10 +1,10 @@
 <h1>  {{ $ctrl.message }}</h1>
-<button ui-sref="index" >{{ $ctrl.back }}</button>
+<button ui-sref="home" >{{ $ctrl.back }}</button>
 
-<ui-view ui-sref-active="is-active"></ui-view>
+<ui-view class="o-viewChild" ui-sref-active="is-active"></ui-view>
 
-<ul>
-    <li ng-repeat="person in $ctrl.directorio.data | orderBy: person.name">
+<ul class="c-collection">
+    <li class="c-collection--item" ng-repeat="person in $ctrl.directorio.data | orderBy: person.name">
         <span>
             {{ person.name }} {{ person.last_nam }} {{ person.id }}
         </span>
