@@ -1,21 +1,26 @@
 const myApp = angular.module('appComponent', ['ui.router']);
 
 myApp
-	.config(function ($stateProvider, $urlRouterProvider){
+.config(function ($stateProvider, $urlRouterProvider){
 
 	let states = [
 		{
 				name:	'login'
 			,	url:	'/'
 			,	component:	'login'
+			,	resolve: {
+					access: function(MainService) {
+						return MainService.getAccess();
+					}
+				}
 		},
 		{
 				name:	'home'
 			,	url:	'/home'
 			,	component: 'home'
 			,	resolve: {
-					home: function(MainService) {
-						return MainService.validarIngreso();
+					access: function(MainService) {
+						return MainService.getAccess();
 					}
 				}
 		}
@@ -25,17 +30,24 @@ myApp
 			,	component: 'directorio'
 			,	resolve:{
 					directorio: function(MainService){
-						return MainService.getAllPeople();
+						return MainService.getAllPeople('all');
+					},
+					access: function(MainService) {
+						return MainService.getAccess();
 					}
 				}
 		}
 		,{ 
 				name: 'directorio.personaDetail'
-			,	url: '/:personId'
+			,	url: ''
+			,	params: {personId: null}
 			,	component: 'person'
 			,	resolve: {
 					person: function (MainService, $stateParams) {
 						return MainService.getPerson($stateParams.personId);
+					},
+					access: function(MainService) {
+						return MainService.getAccess();
 					}
 					// person: (people, $stateParams) => {
 					// 	// return console.log($stateParams)
@@ -56,7 +68,7 @@ myApp
 .run(function($http, $uiRouter) {
 	var Visualizer = window['ui-router-visualizer'].Visualizer;
 	$uiRouter.plugin(Visualizer);
-//   $http.get('data/people.json', { cache: true });
+	//	$http.get('data/people.json', { cache: true });
 })
 
 .component('login', {
@@ -74,85 +86,79 @@ myApp
 })
 .component('person', {
 	bindings: { person: '<' },
-	template: '<div>Name: Hello {{personId}} </div>'
+	template: 
+	`<div class="o-container">
+		<ul>
+			<li><a ui-sref="directorio">back</a></li>
+			<li ng-repeat="user in $ctrl.person">
+			Hello {{ user.name }}
+			</li>
+		</ul>
+	</div> `
 	, controller: CtrlPerson
 })
 .service('MainService', function($http){
 	let service = {
-		validarIngreso: () => {
-			return console.log('Ejecución de servicio validarIngreso')
-			// return $http({
-			//             method:'POST',
-			//             url:'data/includes/sql/acceso/login.php',
-			//             header:{
-			//                 'Content-Type': undefined
-			//             },
-			//             data:{ control : "SI" } 
-			//         }).success(function(respuesta){
-			//             return $scope.ingresoRes = respuesta;
-			//         }).error(function(err){
-			//             return console.log("Error: "+err);
-			//         });
+		getAccess: () => {
 		} ,
-		getAllPeople: () => {
-			// return console.log('Ejecución de servicio getAllPeople')
+		getAllPeople: (query, id_user) => {
+			id_user = id_user || '';
 			return $http({
-			            method:'POST',
-			            url:'data/includes/sql/usuarios/listar_usuarios.php',
-			            header:{
-			                'Content-Type': undefined
-			            },
-			            data:{ control : "SI" } 
-			        }).success(function(respuesta){
-						// console.log(respuesta)
-			            return respuesta;
-			        }).error(function(err){
-			            return console.log("Error: "+err);
-			        });
+				method:'POST',
+				url:'data/includes/sql/usuarios/listar_usuarios.php',
+				header:{
+					'Content-Type': undefined
+				},
+				data:{ 
+					control : "SI",
+					query : query,
+					id_user : id_user
+				}
+			}).success(function(respuesta){
+				return respuesta;
+			}).error(function(err){
+				return console.log("Error: "+err);
+			});
 		} ,
 		getPerson: (id) => {
-			function personMatchesParam(person) {
-				console.log(person)
-				return person.id === id;
-			}
-			return service.getAllPeople().then((people) => {
-				console.log(people)
-				// return people.find(personMatchesParam)
+			return service.getAllPeople('person', id).then((people) => {
+				// return people.data.filter(person => person.id === id)
+				return people.data
 			});
 		}
 	}
 	return service;
 })
 
+/**
+ * FUNCIONES QUE REEMPLAZAN A LOS CONTROLADORES
+ * Estos se usan exclusivamente con cada componente
+ */
 
-// ==================================
-// FUNCIONES QUE REEMPLAZAN A LOS CONTROLADORES
-// Estos se usan exclusivamente con cada componente
-// ==================================
-function CtrlIndex(){
-//   console.log('CtrlIndex')
+function CtrlIndex(){};
+
+function Ctrlingreso(){};
+
+function Ctrldirectorio($scope, $stateParams, $state){
+	let vm = this ;
+		vm.directorio
+		vm.person
+		vm.message = 'Estoy en directorio';
+		vm.back = 'index';
+		getState(vm, $state);
 };
 
-function Ctrlingreso(){
-//   console.log('Ctrlingreso')
+function CtrlPerson($scope, $stateParams, $state) {
+	let vm = this ;
+	$scope.personId = $stateParams.personId
+	getState(vm, $state);
 };
 
-function Ctrldirectorio(MainService){
-	let 
-		vm = this , 
-		dir = vm.directorio
-		// , a = MainService.ListarUsuarios()
-	;
-	vm.message = 'Estoy en directorio';
-	vm.back = 'index';
-  	// console.log(a);
-  	console.log(vm)
-  	console.log(dir.data)
-	//   var usualisDirectorio = MainService.ListarUsuarios()
-	//   console.log(usualisDirectorio.$$state)
-};
+/**
+ * 
+*/
 
-function CtrlPerson(MainService, $scope, $stateParams, $state) {
-	  console.log('Ctrl People')
-	  $scope.personId = $stateParams.personId
-};
+function getState(vm, $state) {
+	vm.state = $state.current.name;
+	console.log(vm.state);
+}
