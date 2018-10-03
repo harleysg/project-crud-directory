@@ -1,5 +1,5 @@
 <?php
-    $URLServer      ="localhost";
-    $folderProyect  ="";
-    $URLlogIn       ="";
+    $URLServer      ="localhost/";
+    $folderProyect  ="ui-router-directory/";
+    $URLlogIn       ="#/";
 ?>
