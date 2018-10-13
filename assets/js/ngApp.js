@@ -1,5 +1,8 @@
 const myApp = angular.module('appComponent', ['ui.router']);
 
+/**
+ * DEFINE Angular functions
+ */
 myApp
 .config(function ($stateProvider, $urlRouterProvider){
 
@@ -71,21 +74,21 @@ myApp
 	var Visualizer = window['ui-router-visualizer'].Visualizer;
 	$uiRouter.plugin(Visualizer);
 	//	$http.get('data/people.json', { cache: true });
-	$rootScope.title = 'uiRoute + AngularJs'
+	$rootScope.head_title = 'uiRouter + angularJS components'
 })
 
 .component('login', {
 		templateUrl: 'components/view.login.html' 
-	,	controller: CtrlIndex
+	,	controller: ctrlLogin
 })
 .component('home', { 
 	templateUrl: 'components/view.home.html' 
-	,	controller: Ctrlingreso
+	,	controller: ctrlHome
 })
 .component('directorio', { 
 		bindings: { directorio: '<' }
 	,	templateUrl: 'components/view.directorio.html' 
-	,	controller: Ctrldirectorio
+	,	controller: ctrlDirectory
 })
 .component('person', {
 	bindings: { person: '<' },
@@ -98,7 +101,7 @@ myApp
 			</li>
 		</ul>
 	</div> `
-	, controller: CtrlPerson
+	, controller: ctrlPerson
 })
 .service('MainService', function($http){
 	let service = {
@@ -138,11 +141,11 @@ myApp
  * Estos se usan exclusivamente con cada componente
  */
 
-function CtrlIndex(){};
+function ctrlLogin(){};
 
-function Ctrlingreso(){};
+function ctrlHome(){};
 
-function Ctrldirectorio($scope, $stateParams, $state){
+function ctrlDirectory($scope, $stateParams, $state){
 	let vm = this ;
 		vm.directorio
 		vm.person
@@ -151,7 +154,7 @@ function Ctrldirectorio($scope, $stateParams, $state){
 		getState(vm, $state);
 };
 
-function CtrlPerson($scope, $stateParams, $state) {
+function ctrlPerson($scope, $stateParams, $state) {
 	let vm = this ;
 	$scope.personId = $stateParams.personId
 	getState(vm, $state);
