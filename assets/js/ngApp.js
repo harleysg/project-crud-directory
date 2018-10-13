@@ -3,7 +3,9 @@ const myApp = angular.module('appComponent', ['ui.router']);
 myApp
 .config(function ($stateProvider, $urlRouterProvider){
 
-	let states = [
+	let
+		domBody = document.querySelector('body'),
+		states = [
 		{
 				name:	'login'
 			,	url:	'/'
@@ -49,12 +51,12 @@ myApp
 					access: function(MainService) {
 						return MainService.getAccess();
 					}
-					// person: (people, $stateParams) => {
-					// 	// return console.log($stateParams)
-					// 	return people.find(function(person) { 
-					// 		return person.id === $stateParams.personId;
-					// 	});
-					// }
+				}
+			,	onEnter: function ($state, $stateParams) {
+					domBody.classList.add('is-viewChild-active');
+				}
+			,	onExit: function ($state, $stateParams) {
+					domBody.classList.remove('is-viewChild-active');
 				}
 		}
 	]
@@ -65,10 +67,11 @@ myApp
 	$urlRouterProvider.otherwise('/')
 })
 
-.run(function($http, $uiRouter) {
+.run(function($http, $uiRouter, $rootScope) {
 	var Visualizer = window['ui-router-visualizer'].Visualizer;
 	$uiRouter.plugin(Visualizer);
 	//	$http.get('data/people.json', { cache: true });
+	$rootScope.title = 'uiRoute + AngularJs'
 })
 
 .component('login', {
