@@ -1,5 +1,5 @@
 const myApp = angular.module('appComponent', ['ui.router']);
-
+const CACHE_NAME = 'pwa-uiRouter-angularJs-directory-cache-v1';
 /**
  * DEFINE Angular functions
  */
@@ -103,7 +103,7 @@ myApp
 	</div> `
 	, controller: ctrlPerson
 })
-.service('MainService', function($http){
+.service('MainService', function ($http){
 	let service = {
 		getAccess: () => {
 		} ,
@@ -115,14 +115,17 @@ myApp
 				header:{
 					'Content-Type': undefined
 				},
+				cache: true,
 				data:{ 
 					control : "SI",
 					query : query,
 					id_user : id_user
 				}
-			}).success(function(respuesta){
-				return respuesta;
+			}).success(function(response){
+				localStorage.directory = JSON.stringify(response)
+				return response;
 			}).error(function(err){
+				return localStorage.directory
 				return console.log("Error: "+err);
 			});
 		} ,
@@ -141,7 +144,19 @@ myApp
  * Estos se usan exclusivamente con cada componente
  */
 
-function ctrlLogin(){};
+function ctrlLogin(){
+	caches
+		.keys()
+		// Depurar cache si algún archivo ha sido cambiado
+		.then(cacheNames => {
+			console.log(cacheNames);
+			return Promise.all(
+				cacheNames.map(cacheName => {
+					console.log(cacheName)
+				})
+			)
+		})
+};
 
 function ctrlHome(){};
 
@@ -152,6 +167,16 @@ function ctrlDirectory($scope, $stateParams, $state){
 		vm.message = 'Estoy en directorio';
 		vm.back = 'index';
 		getState(vm, $state);
+
+	let datos = JSON.stringify(vm.directorio.data)
+	// console.log(datos)
+	if (typeof (Storage) !== "undefined") {
+		if (localStorage.directory) {
+			vm.directorio.data = JSON.parse(localStorage.directory)
+		} else {
+			localStorage.directory = vm.directorio.data
+		}
+	}
 };
 
 function ctrlPerson($scope, $stateParams, $state) {

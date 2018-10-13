@@ -72,8 +72,8 @@ self.addEventListener('fetch', e => {
         caches
             .match(e.request)
             .then(res => {
-                console.log('Recuperando cache')
                 if (res) {
+                    console.log('Recuperando cache')
                     //Si coincide lo retornamos del cache
                     return res
                 }
