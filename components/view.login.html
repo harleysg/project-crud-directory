@@ -1,14 +1,9 @@
 <h1> Bievenido al sitio </h1>
 
+<form class="c-form--login">
+  <input class="c-input c-form--login__input" type="text" placeholder="Email" ng-model="email"/>
+  <input class="c-input c-form--login__input" type="password" placeholder="Clave" ng-model="pass"/>
+  <input class="c-btn c-form--login__btn" type="submit" name="login" value="INGRESAR" ui-sref="home" ui-sref-active="is--active"/>
+</form>
 
-<div class="form ingreso">
-  <div class="logo"> </div>
-  <div class="loginButtons">
-    <form>
-      <input type="text" placeholder="Email" ng-model="email"/>
-      <input type="password" placeholder="Clave" ng-model="pass"/>
-      <input class="loginButton ingreso loginButton ingreso" type="submit" name="login" value="INGRESAR" ui-sref="home" ui-sref-active="is--active"/>
-    </form>
-  </div>
-</div>
 <!--<button ui-sref="directorio" ui-sref-active="is--active">ir a directorio</button>-->

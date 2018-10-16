@@ -1,16 +1,21 @@
-<h1>  {{ $ctrl.message }}</h1>
-<button ui-sref="home" >{{ $ctrl.back }}</button>
-
-<ui-view class="o-viewChild" ui-sref-active="is-active"></ui-view>
-
-<ul class="c-collection">
-    <li class="c-collection--item" ng-repeat="person in $ctrl.directorio.data | orderBy: person.name">
-        <span>
-            {{ person.name }} {{ person.last_nam }} {{ person.id }}
-        </span>
-        <span>
-            {{ person.cargo }}
-        </span>
-        <a ui-sref-active="active" ui-sref="directorio.personaDetail({ personId: person.id })"> ver info de {{ person.id }} </a>
-    </li>
-</ul>
+<div class="o-container">
+    <h1>  {{ $ctrl.message }}</h1>
+    <button class="c-btn" ui-sref="home" >{{ $ctrl.back }}</button>
+</div>
+<div class="o-container">
+    <ul class="c-collection">
+        <li class="c-collection--item" ng-repeat="person in $ctrl.directorio.data | orderBy: person.name">
+            <figure style="width: 2.5rem; height: 2.5rem; background-color: #dadada; border-radius: 5%;"> </figure>
+            <div>
+                {{ person.name }} {{ person.last_nam }} {{ person.id }}
+                <div>
+                    {{ person.cargo }}
+                </div>
+            </div>
+            <div>
+                <a class="c-btn" ui-sref-active="active" ui-sref="directorio.personaDetail({ personId: person.id })"> ver info </a>
+            </div>
+        </li>
+    </ul>
+</div>
+<ui-view></ui-view>
