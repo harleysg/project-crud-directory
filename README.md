@@ -13,3 +13,4 @@ Lista de actualizaciones
 * Personalización de componentes.
 * 3/10/18 - Mejora consultas, Definición de estilos base, mejora servicios y controladores.
 * 13/10/18 - Creación de Manifes.json.
+* 16/10/18 - Optimización del localStorage, validación de conexión a red (navigation.onLine) en los servicios del ngApp.js, nuevos estilos y actualización de estructura en componentes.
