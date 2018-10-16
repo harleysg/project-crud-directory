@@ -3,7 +3,7 @@ CACHE_NAME = 'pwa-uiRouter-angularJs-directory-cache-v1',
 urlsToCache = [
     './',
     './?utm=homescreen',
-    './favicon.ico',
+    './favicon.ico?v=1.0.0.13102018',
     './assets/css/index.css?v=1.0.0.13102018',
     './assets/js/lib/angular.min.js?v=1.0.0.13102018',
     './assets/js/lib/uiRoute.min.js?v=1.0.0.13102018',
@@ -18,13 +18,14 @@ urlsToCache = [
     './assets/images/launch_icon/icon_384x384.png?v=1.0.0.13102018',
     './assets/images/launch_icon/icon_512x512.png?v=1.0.0.13102018',
     './assets/images/launch_icon/icon_1024x1024.png?v=1.0.0.13102018',
-    './favicon.ico?v=1.0.0.13102018',
     './index.html?v=1.0.0.13102018',
     './index.html?utm=homescreen',
     './components/view.directorio.html?v=1.0.0.13102018',
     './components/view.home.html?v=1.0.0.13102018',
     './components/view.login.html?v=1.0.0.13102018',
-    'https://unpkg.com/ionicons@4.4.4/dist/css/ionicons.min.css'
+    'https://unpkg.com/ionicons@4.4.4/dist/css/ionicons.min.css',
+    'http://unpkg.com/@uirouter/visualizer@4',
+    '//unpkg.com/@uirouter/visualizer@4'
 ]
 
 self.addEventListener('install', e => {
@@ -35,6 +36,10 @@ self.addEventListener('install', e => {
             .then(cache => {
                 console.log('Archivos en cache');
                 return cache.addAll(urlsToCache);
+            })
+            .then(() => {
+                // activate the new service worker immediately, without waiting for next load.
+                return self.skipWaiting();
             })
             .catch(err => console.log('Fallo registro de cache: ', err))
     )
