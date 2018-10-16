@@ -93,13 +93,17 @@ myApp
 .component('person', {
 	bindings: { person: '<' },
 	template: 
-	`<div class="o-container">
-		<ul>
-			<li><a ui-sref="directorio">back</a></li>
-			<li ng-repeat="user in $ctrl.person">
-			Hello {{ user.name }}
-			</li>
-		</ul>
+	`<div class="o-viewChild" ui-sref-active="is-active">
+		<div class="o-container--view">
+			<div>
+				<a class="c-btn" ui-sref="directorio">back</a>
+			</div>
+			<div>
+				<span ng-repeat="user in $ctrl.person">
+				Hello {{ user.name }}
+				</span>
+			</div>
+		</div>
 	</div> `
 	, controller: ctrlPerson
 })
@@ -107,33 +111,56 @@ myApp
 	let service = {
 		getAccess: () => {
 		} ,
-		getAllPeople: (query, id_user) => {
-			id_user = id_user || '';
-			return $http({
-				method:'POST',
-				url:'data/includes/sql/usuarios/listar_usuarios.php',
-				header:{
-					'Content-Type': undefined
-				},
-				cache: true,
-				data:{ 
-					control : "SI",
-					query : query,
-					id_user : id_user
+		getAllPeople: (query, id_person) => {
+			id_person = id_person || '';
+			if (navigator.onLine) {
+				return $http({
+					method:'POST',
+					url:'data/includes/sql/usuarios/listar_usuarios.php',
+					header:{
+						'Content-Type': undefined
+					},
+					cache: true,
+					data:{ 
+						control : "SI",
+						query : query,
+						id_user : id_person
+					}
+				}).success(function(response){
+					if (id_person == '') {
+						localStorage.directory = JSON.stringify({data: response})
+					}
+					return response;
+				}).error(function(err){
+					return localStorage.directory
+					return console.log("Error: "+err);
+				});
+			} else if (!navigator.onLine) {
+				
+				if (typeof (Storage) !== "undefined") {
+					
+					if (id_person == '') {
+						if (localStorage.directory) {
+							console.log('People offline');
+							return JSON.parse(localStorage.directory)
+						}
+					} else {
+						console.log('Person offline');
+						let _directoryStorage = JSON.parse(localStorage.directory)
+						return _directoryStorage.data.filter(person => person.id == id_person)
+					}
 				}
-			}).success(function(response){
-				localStorage.directory = JSON.stringify(response)
-				return response;
-			}).error(function(err){
-				return localStorage.directory
-				return console.log("Error: "+err);
-			});
+			}
 		} ,
-		getPerson: (id) => {
-			return service.getAllPeople('person', id).then((people) => {
-				// return people.data.filter(person => person.id === id)
-				return people.data
-			});
+		getPerson: (id_person) => {
+			if (navigator.onLine) {
+				return service.getAllPeople('person', id_person).then((people) => {
+					return people.data
+				});
+			}
+			else if (!navigator.onLine) {
+				return service.getAllPeople('person', id_person)
+			}
 		}
 	}
 	return service;
@@ -149,10 +176,10 @@ function ctrlLogin(){
 		.keys()
 		// Depurar cache si algún archivo ha sido cambiado
 		.then(cacheNames => {
-			console.log(cacheNames);
+			// console.log(cacheNames);
 			return Promise.all(
 				cacheNames.map(cacheName => {
-					console.log(cacheName)
+					// console.log(cacheName)
 				})
 			)
 		})
@@ -167,16 +194,6 @@ function ctrlDirectory($scope, $stateParams, $state){
 		vm.message = 'Estoy en directorio';
 		vm.back = 'index';
 		getState(vm, $state);
-
-	let datos = JSON.stringify(vm.directorio.data)
-	// console.log(datos)
-	if (typeof (Storage) !== "undefined") {
-		if (localStorage.directory) {
-			vm.directorio.data = JSON.parse(localStorage.directory)
-		} else {
-			localStorage.directory = vm.directorio.data
-		}
-	}
 };
 
 function ctrlPerson($scope, $stateParams, $state) {
