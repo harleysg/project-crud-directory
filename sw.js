@@ -4,10 +4,10 @@ urlsToCache = [
     './',
     './?utm=homescreen',
     './favicon.ico?v=1.0.0.13102018',
-    './assets/css/index.css?v=1.0.0.13102018',
+    './assets/css/index.css?v=1.0.0.22112018',
     './assets/js/lib/angular.min.js?v=1.0.0.13102018',
     './assets/js/lib/uiRoute.min.js?v=1.0.0.13102018',
-    './assets/js/ngApp.js?v=1.0.0.13102018',
+    './assets/js/ngApp.js?v=1.0.0.22112018',
     './assets/images/launch_icon/icon_16x16.png?v=1.0.0.13102018',
     './assets/images/launch_icon/icon_32x32.png?v=1.0.0.13102018',
     './assets/images/launch_icon/icon_64x64.png?v=1.0.0.13102018',
@@ -18,34 +18,30 @@ urlsToCache = [
     './assets/images/launch_icon/icon_384x384.png?v=1.0.0.13102018',
     './assets/images/launch_icon/icon_512x512.png?v=1.0.0.13102018',
     './assets/images/launch_icon/icon_1024x1024.png?v=1.0.0.13102018',
-    './index.html?v=1.0.0.13102018',
+    './index.html?v=1.0.0.22112018',
     './index.html?utm=homescreen',
-    './components/view.directorio.html?v=1.0.0.13102018',
-    './components/view.home.html?v=1.0.0.13102018',
-    './components/view.login.html?v=1.0.0.13102018',
+    './components/view.directorio.html?v=1.0.0.22112018',
+    './components/view.home.html?v=1.0.0.22112018',
+    './components/view.login.html?v=1.0.4.22112018',
     'https://unpkg.com/ionicons@4.4.4/dist/css/ionicons.min.css',
     'http://unpkg.com/@uirouter/visualizer@4',
     '//unpkg.com/@uirouter/visualizer@4'
 ]
 
 self.addEventListener('install', e => {
-    console.log('sw installed');
+    // console.log('sw installed');
     e.waitUntil(
         caches
             .open(CACHE_NAME)
-            .then(cache => {
-                console.log('Archivos en cache');
-                return cache.addAll(urlsToCache);
-            })
-            .then(() => {
-                // activate the new service worker immediately, without waiting for next load.
-                return self.skipWaiting();
-            })
+            // console.log('Archivos en cache');
+            .then(cache => cache.addAll(urlsToCache))
+            // activate the new service worker immediately, without waiting for next load.
+            .then(() =>  self.skipWaiting())
             .catch(err => console.log('Fallo registro de cache: ', err))
     )
 })
 self.addEventListener('activate', e => {
-    console.log('sw actived');
+    // console.log(e);
     const cacheWhitelist = [CACHE_NAME]
 
     e.waitUntil(
@@ -70,7 +66,7 @@ self.addEventListener('activate', e => {
     )
 })
 self.addEventListener('fetch', e => {
-    console.log('sw recuperando');
+    // console.log('sw recuperando');
 
     e.respondWith(
         //Miramos si la petición coincide con algún elemento del cache
@@ -78,7 +74,7 @@ self.addEventListener('fetch', e => {
             .match(e.request)
             .then(res => {
                 if (res) {
-                    console.log('Recuperando cache')
+                    console.log('Recuperando cache', res);
                     //Si coincide lo retornamos del cache
                     return res
                 }

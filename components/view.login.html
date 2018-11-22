@@ -1,9 +1,10 @@
-<h1> Bievenido al sitio </h1>
-
-<form class="c-form--login">
+<h1 ui-sref="home" style="color: tomato"> Bievenido al sitio </h1>
+<h2>{{ $ctrl.state.current.name }}</h2>
+<div class="c-form--login">
   <input class="c-input c-form--login__input" type="text" placeholder="Email" ng-model="email"/>
   <input class="c-input c-form--login__input" type="password" placeholder="Clave" ng-model="pass"/>
-  <input class="c-btn c-form--login__btn" type="submit" name="login" value="INGRESAR" ui-sref="home" ui-sref-active="is--active"/>
-</form>
+  <!-- <input class="c-btn c-form--login__btn" type="submit" name="login" value="INGRESAR" ui-sref="home" ui-sref-active="is--active"/> -->
+  <a class="c-btn c-form--login__btn" href="#/home" ui-sref="home" ui-sref-active="is--active"></a>
+</div>
 
 <!--<button ui-sref="directorio" ui-sref-active="is--active">ir a directorio</button>-->

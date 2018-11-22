@@ -150,3 +150,13 @@ body.is-viewChild-active {
     from {opacity: 0;}
     to {opacity: 1;}
 }
+
+/*
+TESTING
+*/
+
+.qa-login .c-form--login{
+    position: relative;
+    margin: auto;
+    min-height: 8rem;
+}

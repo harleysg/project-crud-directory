@@ -4,11 +4,11 @@
 ((d, w, n, c) => {
     // Registro Service worker
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
+        w.addEventListener('load', () => {
             navigator.serviceWorker
                 .register('./sw.js')
                 .then( registration => {
-                    // c('service worker registrado con éxito', registration.scope);
+                    // c('service worker registrado con éxito', registration);
                     // c(registration)
                 })
                 .catch(err => {

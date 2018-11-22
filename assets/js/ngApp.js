@@ -72,7 +72,7 @@ myApp
 
 .run(function($http, $uiRouter, $rootScope) {
 	var Visualizer = window['ui-router-visualizer'].Visualizer;
-	$uiRouter.plugin(Visualizer);
+	// $uiRouter.plugin(Visualizer);
 	//	$http.get('data/people.json', { cache: true });
 	$rootScope.head_title = 'uiRouter + angularJS components'
 })
@@ -132,14 +132,14 @@ myApp
 					}
 					return response;
 				}).error(function(err){
+					console.log("Error: "+err);
 					return localStorage.directory
-					return console.log("Error: "+err);
 				});
 			} else if (!navigator.onLine) {
 				
 				if (typeof (Storage) !== "undefined") {
 					
-					if (id_person == '') {
+					if (query == 'all' || id_person == '') {
 						if (localStorage.directory) {
 							console.log('People offline');
 							return JSON.parse(localStorage.directory)
@@ -171,7 +171,10 @@ myApp
  * Estos se usan exclusivamente con cada componente
  */
 
-function ctrlLogin(){
+function ctrlLogin($scope, $stateParams, $state){
+	let vm = this ;
+	vm.state = $state
+	// console.log(vm)
 	caches
 		.keys()
 		// Depurar cache si algún archivo ha sido cambiado
